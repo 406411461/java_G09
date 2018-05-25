@@ -1,6 +1,7 @@
 package bigggg;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,26 +11,21 @@ import javax.swing.JPanel;
 
 public class DrawTable extends JPanel implements ActionListener{
 	private RunTable runtable;
-	private JPanel actionPanel;
 	private JButton start;
 	
 	public DrawTable() {
 		super();
-		this.setLayout(new BorderLayout());
-		runtable=new RunTable();
-		add(runtable,BorderLayout.CENTER);
-		
-		actionPanel=new JPanel(new GridBagLayout());
-		start =new JButton("start");
+
+		JButton start =new JButton("start");
 		start.addActionListener(this);
-		actionPanel.add(start);
-		
-		add(actionPanel,BorderLayout.SOUTH);
+		add(start,BorderLayout.SOUTH);
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==start) {
+			runtable.go();
+		}
 		
 	}
 

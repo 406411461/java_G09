@@ -4,14 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class DrawBall extends Ball{
-	private int dx,dy;
-	public DrawBall(int x1,int y1,int x2,int y2 ,Color color ,boolean exist) {
-		super(x1,y1,x2,y2,color,exist);
+	private int dx=20,dy=20;
+	public DrawBall(int x1,int y1,Color color ,boolean exist) {
+		super(x1,y1,color,exist);
+	}
+	public DrawBall() {
+		super();
 	}
 	public void draw(Graphics g) {
 		g.setColor(color);
 		
 		int sx=Math.min(x1,x2);
-		int sy=Math.max
+		int sy=Math.min(y1,y2);
+		g.fillOval(sx,sy,dx,dy);
 	}
 }
