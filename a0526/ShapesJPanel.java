@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 public class ShapesJPanel extends JPanel implements KeyListener, ActionListener
 {
+	private int x1, y1, x2, y2;
    // draw shapes with Java 2D API
 	final int PLAYER_NUM = 2;
 	// 更新球位置的計時器
@@ -37,16 +38,11 @@ public class ShapesJPanel extends JPanel implements KeyListener, ActionListener
 	   g2d.fillOval(150,600, 20, 20);	
 	   g2d.setColor(Color.pink);
 	   g2d.fillOval(150,400, 20, 20);
-	   g2d.drawString("Player1:"+ 0, -25, 725);
+	   g2d.setColor(Color.BLACK);
+	   g2d.drawString("Player1:"+ 0,80, 680);
+	   g2d.drawString("Player2:"+ 0, 200, 680);
     }
 
-    
-    public void drawScore(Graphics g) {
-    	Graphics2D g2d = (Graphics2D) g;
-    	g2d.setColor(Color.BLACK);
-    	g2d.drawString("Player1:"+ 0, -25, 725);
-    	g2d.drawString("Player2:"+ 0, 200, 725);
-    }
     
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
