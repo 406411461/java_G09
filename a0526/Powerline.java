@@ -4,18 +4,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import painter.Rect;
-import painter.Shape;
-
-
 
 public class Powerline implements MouseListener,MouseMotionListener{
 	private int x1, y1, x2, y2;
 	private Share currentShape;
-	private Shape shapes[];
+	private Shapes shapes[];
 	private int shapeCount;
 	public Powerline(){
-		shapes = new Shape[100];
+		shapes = new Shapes[100];
 	}
 	@Override
 	public void mouseDragged(MouseEvent e) {

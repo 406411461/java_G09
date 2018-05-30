@@ -2,8 +2,8 @@ package a0526;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
-import painter.Shape;
+//
+//import painter.Shape;
 
 public class Setpower  extends Share{
 	
