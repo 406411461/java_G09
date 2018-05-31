@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 //
 //import painter.Shape;
 
-import p3.DrawFrame;
+
 
 public class Setpower  extends Share{
 	

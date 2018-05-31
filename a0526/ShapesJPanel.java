@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 public class ShapesJPanel extends JPanel implements MouseListener,MouseMotionListener
 {
 	private int x1, y1, x2, y2;
-	private JPanel spanel;
+	Direction  go = new Direction(x1, y1, x2, y2);
 	final int PLAYER_NUM = 2;// draw shapes with Java 2D API
 	
 	Timer ballTimer;// 更新球位置的計時器
@@ -52,18 +52,19 @@ public class ShapesJPanel extends JPanel implements MouseListener,MouseMotionLis
 			currentShape.draw(g);
 			 
 		}
+	   
     }
     
-     
-
 	@Override
 	public void mousePressed(MouseEvent e) {
 		x1 = e.getX();
 		y1 = e.getY();
 		x2 = x1;
 		y2 = y1;
+		go.come1(x1,y1);
 		currentShape = new Setpower(x1,y1,x2,y2);
 		System.out.println("mouseReleased: "+x1+" "+y1);
+		
 	}
 
 	@Override
@@ -80,11 +81,14 @@ public class ShapesJPanel extends JPanel implements MouseListener,MouseMotionLis
 		y2 = e.getY();
 		
 		
-		
-		  
+		currentShape=null;
+		repaint();
 		System.out.println("mouseReleased: "+x2+" "+y2);
 		sum=(x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+		go.come2(x2,y2);
 		System.out.println("sum:"+sum);          //sum值可用來呼叫韓式
+		
+		
 	}
 	
 	
@@ -95,6 +99,8 @@ public class ShapesJPanel extends JPanel implements MouseListener,MouseMotionLis
 	
 	
 	
+	
+
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		// TODO Auto-generated method stub
