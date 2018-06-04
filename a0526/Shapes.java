@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 public class Shapes
 {
+   
    public static void main( String[] args )
    {
       
@@ -15,7 +16,7 @@ public class Shapes
       frame.add( shapesJPanel ); 
       frame.setSize( 350, 725 ); 
       frame.setVisible( true ); 
- 
+      
    } 
 } 
 

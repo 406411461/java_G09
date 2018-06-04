@@ -1,13 +1,9 @@
 package a0526;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 //
 //import painter.Shape;
-
-
 
 public class Setpower  extends Share{
 	
@@ -16,8 +12,6 @@ public class Setpower  extends Share{
 	}
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setStroke(new BasicStroke(5.0f));
-		g2d.setColor(Color.DARK_GRAY);
 		g2d.drawLine(x1,y1,x2,y2);
 	}
 	@Override
