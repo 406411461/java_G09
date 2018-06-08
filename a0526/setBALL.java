@@ -6,7 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;  
 import javax.swing.plaf.ComponentUI;
 
-import java.util.*;  
+import java.util.*;
+import java.util.Timer;  
   
 /** 
  * BallPanel，一个可复用的小球碰撞面板 
@@ -14,51 +15,54 @@ import java.util.*;
  * @version 1.0 2011-1-11 
  */  
 @SuppressWarnings("serial")  
-public class BALL extends JPanel   
+public class setBALL extends JPanel implements MouseListener,MouseMotionListener
 {  
     private ArrayList<Ball> balls = new ArrayList<Ball>();  //小球列表  
+    private Ball ball;
     private BallComponent component = new BallComponent();  //小球画板   
     private BallThread thread = new BallThread();   //小球运动线程  
     private int delay ;  //小球运动的延缓时间  
-      
+
+    private boolean move=true;
+    NumBall nball ;
+	private int x1=600, y1=500;
+	private int x2, y2;
+	Direction  go = new Direction(x1, y1, x2, y2);
+	final int PLAYER_NUM = 2;// draw shapes with Java 2D API
+	
+	Timer ballTimer;// ��s�y��m���p�ɾ�
+	
+	int[] playerScore = new int[PLAYER_NUM];// ���a����
+	
+	private Share currentShape;
+
+
     /** 
      * 初始化小球面板 
      */  
-    public BALL()  
+    public setBALL()  
     {  
-    	
+    	addMouseListener(this);
+		addMouseMotionListener(this);
         setLayout(new BorderLayout());  //设置为BorderLayout的布局  
         add(component, BorderLayout.CENTER);    //将小球画板加到面板中央  
-        component.setOpaque(true);              //设置画板不透明，以便能添加背景色  
-        component.setBackground(Color.WHITE);   //设置背景色
+
         delay = 5; 
-        for(int i=0;i<9;i++) {
-        	component.addBall(); 
-        }
+        
+        
+        component.addBall(880,600); 
+        component.addBall(150,800);
+        component.addBall(150,600); 
+        component.addBall(150,900);
+        component.addBall(150,500); 
+        component.addBall(150,400);
+        component.addBall(150,700); 
+
          
         thread.start(); //画画板的线程开始  
     }  
       
-    /** 
-     * 主函数，主要用于测试 
-     * @param args 
-     */  
-    public static void main(String[] args)  
-    {  
-        EventQueue.invokeLater(new Runnable()  
-            {  
-                public void run()  
-                {  
-                    JFrame frame = new JFrame("Hit Balls"); //设置测试框架的标题  
-                    frame.add(new BALL());     //将小球碰撞动画面板放上去  
-                    frame.setSize(350, 700);        //设置框架大小  
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //设置框架的默认关闭方式  
-                    frame.setLocationByPlatform(true);  //将框架的定位交给系统实现  
-                    frame.setVisible(true);         //设置框架可见 
-                    
-                }  
-            });
-    }  
+
       
     /** 
      * 小球运动线程 
@@ -73,7 +77,7 @@ public class BALL extends JPanel
          */  
         public void run()  
         {  
-            while (true)    //让它一直执行  
+            while (move)    //让它一直执行  
             {  
                 if (!isStop)    //当没有停止的时候  
                 {  
@@ -98,40 +102,44 @@ public class BALL extends JPanel
      */  
     private class BallComponent extends JComponent  
     {  
-        public BallComponent()  
-        {  
-            //说实话，我不是很明白这段代码是干什么的，但是要用到背景色必须用到这段代码  
-            setUI(new ComponentUI()       
-            {  
-                public void installUI(JComponent c)  
-                {  
-                    super.installUI(c);  
-                    LookAndFeel.installColors(c, "Panel.background",  
-                            "Panel.foreground");  
-                }  
-            });  
-        }  
+  
         
-        public void addBall() {
+        public void addBall(int x,int y) {
 			// TODO Auto-generated method stub
-        	double x = 0 ; 
-            double y = 0 ;
-            
-            
+           
+
             Color color = Color.RED;
+            
         	balls.add(new Ball(x, y, color));
 		}
 
 		public void paintComponent(Graphics g)  
         {  
+			
             super.paintComponent(g);  
-            Graphics2D g2 = (Graphics2D)g;  
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.fillArc(-25, -25, 50, 50, 270, 90);
+            g2d.fillArc(310, -25, 50, 50, 180, 90);
+            g2d.fillArc(-25, 320, 50, 50, 270, 180);
+            g2d.fillArc(310, 320, 50, 50, 90, 180);
+            g2d.fillArc(-25, 635, 50, 50, 360, 90);
+            g2d.fillArc(310, 635, 50, 50, 90, 90);
+            
+  
+     	    g2d.setColor(Color.BLACK);
+     	    g2d.drawString("Player1:"+ 0,80, 50);
+     	    g2d.drawString("Player2:"+ 0, 200, 50);
+     	
             for (int i = 0; i < balls.size(); i++)   //将小球列表中的小球都画到画板上  
             {  
                 Ball ball = balls.get(i);  
-                g2.setColor(ball.getColor());   //设置画布中小球的颜色  
-                g2.fill(ball.getShape());       //画出小球的形状  
-            }  
+                g2d.setColor(ball.getColor());   //设置画布中小球的颜色  
+                g2d.fill(ball.getShape());       //画出小球的形状  
+            }
+            if(currentShape != null){
+    			currentShape.draw(g);
+    			 
+    		}
         }  
     }  
       
@@ -139,13 +147,14 @@ public class BALL extends JPanel
      * 小球类 
      * @author zjf 
      */  
-    private class Ball  
+    class Ball  
     {  
         private static final double SIZE = 20;  //小球的直径  
+        private int speed=2;
         private double x;   //小球所在的x坐标  
         private double y;   //小球所在的y坐标  
-        private double vx = Math.sqrt(2) / 2;   //小球在x轴的速度  
-        private double vy = Math.sqrt(2) / 2;   //小球在y轴的速度  
+        private double vx = Math.sqrt(speed) / 2;   //小球在x轴的速度  
+        private double vy = Math.sqrt(speed) / 2;   //小球在y轴的速度  
         private Color color = Color.RED;      //小球的颜色  
           
         /** 
@@ -153,7 +162,9 @@ public class BALL extends JPanel
          * @param x 小球所在的x坐标 
          * @param y 小球所在的y坐标 
          * @param color 小球的颜色 
+         * @return 
          */  
+
         public Ball(double x, double y, Color color)  
         {  
         	Random rand = new Random();
@@ -247,5 +258,76 @@ public class BALL extends JPanel
             Ball ball = (Ball)object;           //将另一个对象强制转化为小球  
             return x == ball.x && y == ball.y && color.equals(ball.color);  //通过方位，颜色判断是否相同  
         }  
-    }  
+    }
+    @Override
+	public void mousePressed(MouseEvent e) {
+		x1 = e.getX();
+		y1 = e.getY();
+		x2 = x1;
+		y2 = y1;
+		go.come1(x1,y1);
+		currentShape = new Setpower(x1,y1,x2,y2);
+		System.out.println("mouseReleased: "+x1+" "+y1);
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		currentShape.x2 = e.getX();
+		currentShape.y2 = e.getY();
+		repaint();
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		int sum;
+		x2 = e.getX();
+		y2 = e.getY();
+		
+		
+		currentShape=null;
+		repaint();
+		System.out.println("mouseReleased: "+x2+" "+y2);
+		sum=((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))/10000;
+
+
+		System.out.println("sum:"+sum);          //sum�ȥi�ΨөI�s����
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
 } 

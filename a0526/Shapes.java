@@ -7,16 +7,18 @@ public class Shapes
    
    public static void main( String[] args )
    {
-      
-      JFrame frame = new JFrame( "���y" );
+      setBALL ball = new setBALL(); 
+      JFrame frame = new JFrame( "���y" );
       frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
       
-      ShapesJPanel shapesJPanel = new ShapesJPanel();
-      frame.add( shapesJPanel ); 
-      frame.setSize( 350, 725 ); 
-      frame.setVisible( true ); 
+  
       
+      frame.add( ball ); 
+      frame.setSize( 350, 705 ); 
+
+      frame.setLocationByPlatform(true);  //将框架的定位交给系统实现  
+      frame.setVisible(true);         //设置框架可见 
    } 
 } 
 
