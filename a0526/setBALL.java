@@ -18,16 +18,17 @@ import java.util.Timer;
 public class setBALL extends JPanel implements MouseListener,MouseMotionListener
 {  
     private ArrayList<Ball> balls = new ArrayList<Ball>();  //小球列表  
-    private Ball ball;
+
     private BallComponent component = new BallComponent();  //小球画板   
     private BallThread thread = new BallThread();   //小球运动线程  
     private int delay ;  //小球运动的延缓时间  
 
     private boolean move=true;
     NumBall nball ;
-	private int x1=600, y1=500;
+	private int x[]= {100,200};
+	private int y[]= {100,300};
+	private int x1, y1;
 	private int x2, y2;
-	Direction  go = new Direction(x1, y1, x2, y2);
 	final int PLAYER_NUM = 2;// draw shapes with Java 2D API
 	
 	Timer ballTimer;// ��s�y��m���p�ɾ�
@@ -49,14 +50,9 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
 
         delay = 5; 
         
+        for(int i=0;i<2;i++)
+        component.addBall(100,100); 
         
-        component.addBall(880,600); 
-        component.addBall(150,800);
-        component.addBall(150,600); 
-        component.addBall(150,900);
-        component.addBall(150,500); 
-        component.addBall(150,400);
-        component.addBall(150,700); 
 
          
         thread.start(); //画画板的线程开始  
@@ -81,7 +77,7 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
             {  
                 if (!isStop)    //当没有停止的时候  
                 {  
-                    for (int i = 0; i < balls.size(); i++)  
+                    for (int i = 0; i <1; i++)  
                     {  
                         balls.get(i).move(component.getBounds());   //每个小球都移动一遍  
                     }  
@@ -102,13 +98,12 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
      */  
     private class BallComponent extends JComponent  
     {  
-  
-        
-        public void addBall(int x,int y) {
-			// TODO Auto-generated method stub
-           
 
-            Color color = Color.RED;
+		public void addBall(double x,double y) {
+			// TODO Auto-generated method stub
+
+            Color color = Color.BLUE;  //小球开始的颜色 
+
             
         	balls.add(new Ball(x, y, color));
 		}
@@ -118,6 +113,8 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
 			
             super.paintComponent(g);  
             Graphics2D g2d = (Graphics2D)g;
+        	g2d.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+           	g2d.setRenderingHint (RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
             g2d.fillArc(-25, -25, 50, 50, 270, 90);
             g2d.fillArc(310, -25, 50, 50, 180, 90);
             g2d.fillArc(-25, 320, 50, 50, 270, 180);
@@ -125,7 +122,7 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
             g2d.fillArc(-25, 635, 50, 50, 360, 90);
             g2d.fillArc(310, 635, 50, 50, 90, 90);
             
-  
+            
      	    g2d.setColor(Color.BLACK);
      	    g2d.drawString("Player1:"+ 0,80, 50);
      	    g2d.drawString("Player2:"+ 0, 200, 50);
@@ -149,12 +146,13 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
      */  
     class Ball  
     {  
+    	BouncingBallSimple bounce = new BouncingBallSimple();
         private static final double SIZE = 20;  //小球的直径  
         private int speed=2;
         private double x;   //小球所在的x坐标  
         private double y;   //小球所在的y坐标  
-        private double vx = Math.sqrt(speed) / 2;   //小球在x轴的速度  
-        private double vy = Math.sqrt(speed) / 2;   //小球在y轴的速度  
+        private double vx;   //小球在x轴的速度  
+        private double vy;   //小球在y轴的速度  
         private Color color = Color.RED;      //小球的颜色  
           
         /** 
@@ -163,24 +161,28 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
          * @param y 小球所在的y坐标 
          * @param color 小球的颜色 
          * @return 
+         * @return 
          */  
-
+       
         public Ball(double x, double y, Color color)  
         {  
-        	Random rand = new Random();
-        	x = rand.nextDouble();  
-            y = rand.nextDouble();
+        	
             this.x = x;  
             this.y = y;  
             this.color = color;  
+            sp(speed);
         }  
-          
+        public void sp(int speed) {
+        	vx = Math.sqrt(speed) / 2;
+        	vy = Math.sqrt(speed) / 2;
+        }
         /** 
          * 小球在一个矩形边框中移动 
          * @param bounds 矩形边框 
          */  
         public void move(Rectangle2D bounds)  
         {  
+        	
             x += vx;    //小球在x轴上的位移  
             y += vy;    //小球在y轴上的位移  
             double minX = bounds.getMinX(); //矩形边界的最小x坐标  
@@ -235,6 +237,7 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
          */  
         public Ellipse2D getShape()  
         {  
+
             return new Ellipse2D.Double(x, y, SIZE, SIZE);  
         }  
           
@@ -265,7 +268,7 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
 		y1 = e.getY();
 		x2 = x1;
 		y2 = y1;
-		go.come1(x1,y1);
+;
 		currentShape = new Setpower(x1,y1,x2,y2);
 		System.out.println("mouseReleased: "+x1+" "+y1);
 		
@@ -289,8 +292,8 @@ public class setBALL extends JPanel implements MouseListener,MouseMotionListener
 		repaint();
 		System.out.println("mouseReleased: "+x2+" "+y2);
 		sum=((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))/10000;
-
-
+		
+		
 		System.out.println("sum:"+sum);          //sum�ȥi�ΨөI�s����
 		
 		
