@@ -1,4 +1,4 @@
-
+﻿
 
  import java.awt.Color;
  import java.awt.Graphics;
@@ -10,7 +10,7 @@ import javax.swing.JFrame;
  
  public class ballboucing extends JFrame implements MouseListener,MouseMotionListener{
 	
-	//摰�?蝘�??���
+	
 	 int speed = 10;
 	 static int width = 500;
 	 static int height = 500;
@@ -18,11 +18,11 @@ import javax.swing.JFrame;
      int y=100;
 //     double m = 1;
 //     double n = -1;
-     double vx = 4;   //撠�x頧渡��漲  
+     double vx = 4;    
      double vy = 9; 
      int i=175;
      int j=350;
-     double vi = 6;   //撠�x頧渡��漲  
+     double vi = 6;    
      double vj = 10;
      int radius=50;
 	 int stick_x=275;
@@ -33,17 +33,17 @@ import javax.swing.JFrame;
 	 int momvx=0;
 	 int momvy=0;
 	 
-     //銝餃?
+     
      public static void main(String[] args) {
          new  ballboucing();
      }
-     //雿輻���?撱箇��僎?蝵�
+     
      public  ballboucing(){
          this.setVisible(true);
          this.setSize(width,height);
          this.setDefaultCloseOperation(3);
          this.setResizable(false);
-         this.setTitle("??獢");
+         this.setTitle("測試程式");
          addMouseListener(this);
          addMouseMotionListener(this);
          
@@ -81,7 +81,7 @@ import javax.swing.JFrame;
 
      
      
-     //���???�瘜�
+     
      @Override
      public void paint(Graphics g) {
          super.paint(g);
@@ -111,7 +111,7 @@ import javax.swing.JFrame;
    		 stick_y=momy+radius/2;
         
      }
-     //摰�?撠�宏???
+     
      public void move(){
          while(true){
         	 /*t++;
@@ -248,9 +248,9 @@ import javax.swing.JFrame;
            	     tempy=vy;
                  vy=vj;
            	     vj=tempy;
-                 //double degree = Math.atan((x-i) / (y-j)); //���撌曹���１��������敶Ｘ��允閫��蛹憭寡���-pi/2-pi/2銋嚗�隞亥����銝斤��������蝟�  
+                 //double degree = Math.atan((x-i) / (y-j));   
         
-//                 if (x > i)      //憒�撌梁����之鈭��１�����������摮衣霂��撌勗�砲敺�甇����  
+//                 if (x > i)        
 //                 {  
 //                	    vx = vx*Math.cos(degree);    
 //                        vy = vy*Math.sin(degree);
@@ -258,7 +258,7 @@ import javax.swing.JFrame;
 //                        vi = vi*-Math.cos(degree);  
 //                        vj = vj*-Math.sin(degree); 
 //                 }  
-//                 else if(x < i)   //憒�撌梁��������１�����������摮衣霂�摨砲�����  
+//                 else if(x < i)     
 //                 {  
 //                 	    vx = vx*-Math.cos(degree);    
 //                         vy = vy*-Math.sin(degree);
