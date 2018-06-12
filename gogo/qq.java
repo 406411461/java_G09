@@ -247,20 +247,14 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 					if (Math.sqrt(Math.pow(x - i, 2) + Math.pow(y - j, 2)) < 24) {
 						System.out.print("0");
 						double degree = Math.atan((x - i) / (y - j));
-						if (x > i) {
-							vx = vx * Math.cos(degree);
-							vy = vy * Math.sin(degree);
-							System.out.print("1");
-							nonvx = nonvx * -Math.cos(degree);
-							nonvy = nonvy * -Math.sin(degree);
-						} else if (x < i) {
-							vx = vx * -Math.cos(degree);
-							vy = vy * -Math.sin(degree);
-
-							nonvx = nonvx * Math.cos(degree);
-							nonvy = nonvy * Math.sin(degree);
-						}
-
+						// if (x > i) {
+						vx = vx * Math.cos(degree);
+						vy = vy * Math.sin(degree);
+						System.out.print("1");
+						nonvx = vx;
+						nonvy = vy;
+						
+						ball[1].move(vx, vy);
 					}
 					if (count >= repainted) {
 						count = 0;
