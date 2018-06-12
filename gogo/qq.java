@@ -15,13 +15,13 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 	double minv = 0.01;
 	int redo = 20;
 	int repainted = 1;
-	int mouseX, mouseY, drag_flag;
+	int mouseX, mouseY, stick;
 	double xmin, xmax, ymax, ymin, radius, rad2, vx, vy;
 	double x, y, i, j;
 
 	double[][] pockets = new double[6][2];
 	double ballposition[][] = new double[10][2];
-	boolean frictionstop = true;
+	
 	Ball ball[] = new Ball[10];
 	Color ballColor[] = new Color[10];
 
@@ -51,8 +51,8 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		ballColor[0] = new Color(255, 255, 255);
 		ballColor[1] = new Color(255, 255, 0);
 
-		x = 600;
-		y = 200;
+		x = 500;
+		y = 300;
 		ballposition[0][0] = x;
 		ballposition[0][1] = y;
 		i = 266;
@@ -86,7 +86,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 			drawcir(g, ball[i].getX(), ball[i].getY(), radius);
 
 		}
-		if (drag_flag > 0) {
+		if (stick > 0) {
 			g.setColor(Color.lightGray);
 			g.drawLine((int) ball[0].getX(), (int) ball[0].getY(), (int) mouseX, (int) mouseY);
 		}
@@ -101,11 +101,11 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 	}
 
 	public void mousePressed(MouseEvent e) {
-		drag_flag = 1;
+		stick = 1;
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		drag_flag = 0;
+		stick = 0;
 		vx = (ball[0].getX() - mouseX) / 3;
 		vy = (ball[0].getY() - mouseY) / 3;
 		ball[0].move(vx, vy);
@@ -243,17 +243,37 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 						momvy = -momvy;
 						y -= radius;
 					}
+					if (i < 12) {
+						nonvx = -nonvx;
+						i += radius;
+					}
+					if (i > 788) {
+						nonvx = -nonvx;
+						i -= radius;
+					}
+
+					if (j < 12) {
+						nonvy = -nonvy;
+						j += radius;
+					}
+					if (j > 388) {
+						nonvy = -nonvy;
+						j -= radius;
+					}
 
 					if (Math.sqrt(Math.pow(x - i, 2) + Math.pow(y - j, 2)) < 24) {
 						System.out.print("0");
-						double degree = Math.atan((x - i) / (y - j));
+//						double degree = Math.atan((x - i) / (y - j));
 						// if (x > i) {
-						vx = vx * Math.cos(degree);
-						vy = vy * Math.sin(degree);
-						System.out.print("1");
-						nonvx = vx;
-						nonvy = vy;
-						
+						double tempx,tempy;
+						tempx=momvx;
+						momvx=nonvx;
+						tempy=momvx;
+						momvy=nonvy;
+						nonvy=tempy;
+											
+					
+
 						ball[1].move(vx, vy);
 					}
 					if (count >= repainted) {
