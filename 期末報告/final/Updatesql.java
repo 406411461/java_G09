@@ -2,7 +2,7 @@
 import java.sql.*;
 /**
  * Description:
- * <br/>網站: <a href="http://www.crazyit.org">瘋狂Java聯盟</a>
+ * <br/>蝬脩��: <a href="http://www.crazyit.org">���ava����</a>
  * <br/>Copyright (C), 2001-2016, Yeeku.H.Lee
  * <br/>This program is protected by copyright laws.
  * <br/>Program Name:
@@ -28,7 +28,7 @@ public class Updatesql
 		
 		try {
 		    conn =
-		       DriverManager.getConnection("jdbc:mysql://localhost/ball_test?" +
+		       DriverManager.getConnection("jdbc:mysql://localhost/test?" +
 		                                   "user=root&password=0000&serverTimezone=UTC&useSSL=false");
 		    Statement stmt = conn.createStatement();
 		    
@@ -44,8 +44,15 @@ public class Updatesql
             ps.setInt(3, bb.momvx);
             ps.setInt(4, bb.momvy);
             ps.executeUpdate();
+            
+            PreparedStatement pp = conn.prepareStatement("INSERT INTO non_table (nonx, nony,nonvx,nonvy) VALUES(?, ?,?,?);");
+            pp.setInt(1, bb.nonx());
+            pp.setInt(2, bb.nony());
+            pp.setInt(3, bb.nonvx());
+            pp.setInt(4, bb.nonvy());
+            pp.executeUpdate();
 		    
-			ResultSet rs = stmt.executeQuery("SELECT * FROM ball_test.mom_table;");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM test.non_table;");
 		    
 					while(rs.next())
 					{

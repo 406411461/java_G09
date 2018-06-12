@@ -10,39 +10,40 @@ import javax.swing.JFrame;
  
  public class ballboucing extends JFrame implements MouseListener,MouseMotionListener{
 	
-	//定?移??量
+	//摰�?蝘�??���
 	 int speed = 10;
 	 static int width = 500;
 	 static int height = 500;
-     int x=100;
+     int x=150;
      int y=100;
 //     double m = 1;
 //     double n = -1;
-     double vx = 4;   //小球在x轴的速度  
+     double vx = 4;   //撠�x頧渡��漲  
      double vy = 9; 
      int i=175;
      int j=350;
-     double vi = 6;   //小球在x轴的速度  
+     double vi = 6;   //撠�x頧渡��漲  
      double vj = 10;
      int radius=50;
 	 int stick_x=275;
 	 int stick_y=425;
 	 int momx=250;
-	 int momy=400;
+	 int momy=20;
 	 int momm=0;
 	 int momvx=0;
 	 int momvy=0;
-     //主函?
+	 
+     //銝餃?
      public static void main(String[] args) {
          new  ballboucing();
      }
-     //使用构造器?建窗体并?置
+     //雿輻���?撱箇��僎?蝵�
      public  ballboucing(){
          this.setVisible(true);
          this.setSize(width,height);
          this.setDefaultCloseOperation(3);
          this.setResizable(false);
-         this.setTitle("??框架");
+         this.setTitle("??獢");
          addMouseListener(this);
          addMouseMotionListener(this);
          
@@ -53,20 +54,34 @@ import javax.swing.JFrame;
      }
      
      public int momx(){
-    	 return momx;
+    	 return i;
      }
      public int momy(){
-    	 return momy;
+    	 return j;
      }
      public int momvx(){
-    	 return momy;
+    	 return (int) vi;
      }
      public int momvy(){
-    	 return momy;
+    	 return (int) vj;
      }
      
+     public int nonx(){
+    	 return x;
+     }
+     public int nony(){
+    	 return y;
+     }
+     public int nonvx(){
+    	 return (int) vx;
+     }
+     public int nonvy(){
+    	 return (int) vy;
+     }
+
      
-     //重???方法
+     
+     //���???�瘜�
      @Override
      public void paint(Graphics g) {
          super.paint(g);
@@ -86,12 +101,17 @@ import javax.swing.JFrame;
          momvx();
          momvy();
          
+         nonx();
+         nony();
+         nonvx();
+         nonvy();
+         
          g.drawLine(momx+radius/2,momy+radius/2, stick_x,stick_y );
          stick_x=momx+radius/2;
    		 stick_y=momy+radius/2;
         
      }
-     //定?小球移???
+     //摰�?撠�宏???
      public void move(){
          while(true){
         	 /*t++;
@@ -128,8 +148,9 @@ import javax.swing.JFrame;
 					else if (x+50 > width) {
 						vx = -vx;
 						x = width-50;
+						
 					}
-					break;
+					
 			}
              if(vx < 0){
             	 //System.out.println("x=0");
@@ -139,7 +160,7 @@ import javax.swing.JFrame;
 					}
 					else if (x < 0) {
 						 vx = -vx;
-						 x = 0;
+						 x = 50;
 					}
 			 }
              
@@ -162,9 +183,8 @@ import javax.swing.JFrame;
 					}
 					else if (y < 0) {
 						 vy = -vy;
-						 y = 0;
-					}
-             }
+						 y = 50;
+					}       }
              
              if(vi >0){
             	 //System.out.println("x=450");
@@ -185,7 +205,7 @@ import javax.swing.JFrame;
 					}
 					else if (i < 0) {
 						 vi = -vi;
-						 i = 0;
+						 i = 50;
 					}
 			 }
              
@@ -208,7 +228,7 @@ import javax.swing.JFrame;
 					}
 					else if (j < 0) {
 						 vj = -vj;
-						 j = 0;
+						 j = 50;
 					}
              }
              
@@ -220,25 +240,32 @@ import javax.swing.JFrame;
              if(Math.sqrt(Math.pow(x-i,2)+Math.pow(y-j,2))<50) {
             	 //System.out.println(Math.sqrt(Math.pow(x-a,2)+Math.pow(y-b,2)));
             	
-            	 
-                 double degree = Math.atan((x-i) / (y-j)); //获取自己与发生碰撞的小球之间所形成的夹角，因为夹角只能在-pi/2-pi/2之间，所以还需判断两球的x坐标之间的关系  
+            	 double tempx;
+           	     tempx=vx;
+                 vx=vi;
+           	     vi=tempx;
+           	     double tempy;
+           	     tempy=vy;
+                 vy=vj;
+           	     vj=tempy;
+                 //double degree = Math.atan((x-i) / (y-j)); //���撌曹���１��������敶Ｘ��允閫��蛹憭寡���-pi/2-pi/2銋嚗�隞亥����銝斤��������蝟�  
         
-                 if (x > i)      //如果自己的x坐标大于发生碰撞的小球的x坐标，由数学知识可知自己应该往正向运动  
-                 {  
-                	    vx = vx*Math.cos(degree);    
-                        vy = vy*Math.sin(degree);
-                     
-                        vi = vi*-Math.cos(degree);  
-                        vj = vj*-Math.sin(degree); 
-                 }  
-                 else if(x < i)   //如果自己的x坐标小于发生碰撞的小球的x坐标，由数学知识可知应该朝负向运动  
-                 {  
-                 	    vx = vx*-Math.cos(degree);    
-                         vy = vy*-Math.sin(degree);
-                      
-                         vi = vi*Math.cos(degree);  
-                         vj = vj*Math.sin(degree); 
-                  }  
+//                 if (x > i)      //憒�撌梁����之鈭��１�����������摮衣霂��撌勗�砲敺�甇����  
+//                 {  
+//                	    vx = vx*Math.cos(degree);    
+//                        vy = vy*Math.sin(degree);
+//                     
+//                        vi = vi*-Math.cos(degree);  
+//                        vj = vj*-Math.sin(degree); 
+//                 }  
+//                 else if(x < i)   //憒�撌梁��������１�����������摮衣霂�摨砲�����  
+//                 {  
+//                 	    vx = vx*-Math.cos(degree);    
+//                         vy = vy*-Math.sin(degree);
+//                      
+//                         vi = vi*Math.cos(degree);  
+//                         vj = vj*Math.sin(degree); 
+//                  }  
                    
              }
              
