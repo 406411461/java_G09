@@ -10,14 +10,14 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 
 public class qq extends Applet implements MouseListener, MouseMotionListener {
-	int Ballcount = 10;
+	int Ballcount = 2;
 	double pocketSize2 = 4.0;
 	double minv = 0.01;
 	int redo = 20;
 	int repainted = 1;
 	int mouseX, mouseY, drag_flag;
 	double xmin, xmax, ymax, ymin, radius, rad2, vx, vy;
-	double x, y;
+	double x, y, i, j;
 
 	double[][] pockets = new double[6][2];
 	double ballposition[][] = new double[10][2];
@@ -32,7 +32,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		ymin = 0.0;
 		xmax = 800.0;
 		ymax = 400.0;
-		radius =12;
+		radius = 12;
 		rad2 = radius * radius * 4.0;
 		pockets[0][0] = xmin;
 		pockets[1][0] = xmin;
@@ -47,43 +47,18 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		pockets[3][1] = ymax;
 		pockets[4][1] = ymin;
 		pockets[5][1] = ymax;
-		
+
 		ballColor[0] = new Color(255, 255, 255);
 		ballColor[1] = new Color(255, 255, 0);
-		ballColor[2] = new Color(255, 0, 0);
-		ballColor[3] = new Color(0, 0, 0);
-		ballColor[4] = new Color(125, 125, 125);
-		ballColor[5] = new Color(125, 125, 0);
-		ballColor[6] = new Color(125, 0, 0);
-		ballColor[7] = new Color(0, 125, 0);
-		ballColor[8] = new Color(0, 255, 255);
-		ballColor[9] = new Color(0, 255, 255);
 
-		ballposition[0][0] = 600;
-		ballposition[0][1] = 200;
-
-		ballposition[1][0] = 266;
-		ballposition[1][1] = 200;
-
-		ballposition[2][0] = 242;
-		ballposition[2][1] = 218;
-		ballposition[3][0] = 242;
-		ballposition[3][1] = 182;
-
-		ballposition[4][0] = 218;
-		ballposition[4][1] = 164;
-		ballposition[5][0] = 218;
-		ballposition[5][1] = 200;
-		ballposition[6][0] = 218;
-		ballposition[6][1] = 236;
-
-		ballposition[7][0] = 194;
-		ballposition[7][1] = 218;
-		ballposition[8][0] = 194;
-		ballposition[8][1] = 182;
-		
-		ballposition[9][0] = 170;
-		ballposition[9][1] =200;
+		x = 600;
+		y = 200;
+		ballposition[0][0] = x;
+		ballposition[0][1] = y;
+		i = 266;
+		j = 200;
+		ballposition[1][0] = i;
+		ballposition[1][1] = j;
 
 		ball[0] = new Ball(x, y);
 		for (int i = 0; i < Ballcount; i++) {
@@ -109,7 +84,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 			Color a = ball[i].getColor();
 			g.setColor(a);
 			drawcir(g, ball[i].getX(), ball[i].getY(), radius);
-			
+
 		}
 		if (drag_flag > 0) {
 			g.setColor(Color.lightGray);
@@ -138,7 +113,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 	}
 
 	class Ball {
-		double momvx, momvy;
+		double momvx, momvy, nonvx, nonvy;
 		double x, y;
 		Color color;
 		int thisBall;
@@ -146,7 +121,6 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		int count;
 		boolean running = false;
 		boolean stop = false;
-
 
 		public Ball(double x, double y, Color color, int ib) {
 			this.x = x;
@@ -156,9 +130,9 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		}
 
 		public Ball(double x2, double y2) {
-			this.x=x2;
-			this.y=y2;
-			
+			this.x = x2;
+			this.y = y2;
+
 		}
 
 		public void setXY(double x, double y) {
@@ -220,7 +194,6 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 
 			momvx = vx;
 			momvy = vy;
-
 			myThread = new Thread(new gg());
 			myThread.start();
 
@@ -230,7 +203,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 
 			public void run() {
 				running = true;
-				while (true) { // Start of infinite loop
+				while (running) { // Start of infinite loop
 					try {
 						Thread.sleep(redo);
 					} catch (InterruptedException e) {
@@ -241,7 +214,8 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 					// Apply friction
 					momvx *= 0.98;
 					momvy *= 0.98;
-
+					nonvy *= 0.98;
+					nonvx *= 0.98;
 					// Stop calculating if running too slowly
 					if (((momvx > -minv) && (momvx < minv)) && ((momvy > -minv) && (momvy < minv))) {
 						running = false;
@@ -250,25 +224,44 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 					// Move the ball
 					x += momvx;
 					y += momvy;
-					if (x < (xmin + radius)) {
+					i += nonvx;
+					j += nonvy;
+					if (x < 12) {
 						momvx = -momvx;
 						x += radius;
 					}
-					if (x > (xmax - radius)) {
+					if (x > 788) {
 						momvx = -momvx;
 						x -= radius;
 					}
 
-					if (y < (ymin + radius)) {
+					if (y < 12) {
 						momvy = -momvy;
 						y += radius;
 					}
-					if (y > (ymax - radius)) {
+					if (y > 388) {
 						momvy = -momvy;
 						y -= radius;
 					}
 
-					// repaint sometimes
+					if (Math.sqrt(Math.pow(x - i, 2) + Math.pow(y - j, 2)) < 24) {
+						System.out.print("0");
+						double degree = Math.atan((x - i) / (y - j));
+						if (x > i) {
+							vx = vx * Math.cos(degree);
+							vy = vy * Math.sin(degree);
+							System.out.print("1");
+							nonvx = nonvx * -Math.cos(degree);
+							nonvy = nonvy * -Math.sin(degree);
+						} else if (x < i) {
+							vx = vx * -Math.cos(degree);
+							vy = vy * -Math.sin(degree);
+
+							nonvx = nonvx * Math.cos(degree);
+							nonvy = nonvy * Math.sin(degree);
+						}
+
+					}
 					if (count >= repainted) {
 						count = 0;
 						repaint();
@@ -305,7 +298,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 	}
 
 	public static void main(String[] args) {
-		JFrame app = new JFrame("º≤≤y");
+		JFrame app = new JFrame("ÊíûÁêÉ");
 		app.setSize(900, 500);
 		qq a = new qq();
 		app.add(a);
