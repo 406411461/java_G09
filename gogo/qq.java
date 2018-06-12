@@ -11,16 +11,13 @@ import javax.swing.JFrame;
 
 public class qq extends Applet implements MouseListener, MouseMotionListener {
 	int Ballcount = 10;
-	double Trans_v = 3.0;
 	double pocketSize2 = 4.0;
-	double friction = 0.98;
-	double minVel = 0.01;
+	double minv = 0.01;
 	int redo = 20;
 	int repainted = 1;
-	// String tmptype, scoreString="", msgString= "";
-	int mouseX, mouseY, drag_flag, points;
-	double xmin, xmax, ymax, ymin, radius, rad2, vX, vY;
-	double startX, startY, x, y, pointerx, pointery;
+	int mouseX, mouseY, drag_flag;
+	double xmin, xmax, ymax, ymin, radius, rad2, vx, vy;
+	double x, y;
 
 	double[][] pockets = new double[6][2];
 	double ballposition[][] = new double[10][2];
@@ -35,12 +32,8 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		ymin = 0.0;
 		xmax = 800.0;
 		ymax = 400.0;
-		radius = 1.1 * (xmax - xmin) / 67.0;
-
+		radius =12;
 		rad2 = radius * radius * 4.0;
-		startX = 0.75 * (xmax + xmin);
-		startY = 0.5 * (ymax + ymin);
-		// 以下做球袋的位子
 		pockets[0][0] = xmin;
 		pockets[1][0] = xmin;
 		pockets[2][0] = xmax;
@@ -54,7 +47,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		pockets[3][1] = ymax;
 		pockets[4][1] = ymin;
 		pockets[5][1] = ymax;
-		// scoreString="Points : 0";
+		
 		ballColor[0] = new Color(255, 255, 255);
 		ballColor[1] = new Color(255, 255, 0);
 		ballColor[2] = new Color(255, 0, 0);
@@ -62,37 +55,37 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		ballColor[4] = new Color(125, 125, 125);
 		ballColor[5] = new Color(125, 125, 0);
 		ballColor[6] = new Color(125, 0, 0);
-		ballColor[7] = new Color(100, 100, 100);
+		ballColor[7] = new Color(0, 125, 0);
 		ballColor[8] = new Color(0, 255, 255);
 		ballColor[9] = new Color(0, 255, 255);
 
-		ballposition[0][0] = startX;
-		ballposition[0][1] = startY;
+		ballposition[0][0] = 600;
+		ballposition[0][1] = 200;
 
-		ballposition[1][0] = 1 * (xmax + xmin) / 3;
-		ballposition[1][1] = (ymax + ymin) / 2;
+		ballposition[1][0] = 266;
+		ballposition[1][1] = 200;
 
-		ballposition[2][0] = ballposition[1][0] - 2 * radius;
-		ballposition[2][1] = ballposition[1][1] + 1.5 * radius;
-		ballposition[3][0] = ballposition[1][0] - 2 * radius;
-		ballposition[3][1] = ballposition[1][1] - 1.5 * radius;
+		ballposition[2][0] = 242;
+		ballposition[2][1] = 218;
+		ballposition[3][0] = 242;
+		ballposition[3][1] = 182;
 
-		ballposition[4][0] = ballposition[1][0] - 4.0 * radius;
-		ballposition[4][1] = ballposition[1][1] + 3.0 * radius;
-		ballposition[5][0] = ballposition[1][0] - 4.0 * radius;
-		ballposition[5][1] = ballposition[1][1];
-		ballposition[6][0] = ballposition[1][0] - 4.0 * radius;
-		ballposition[6][1] = ballposition[1][1] - 3.0 * radius;
+		ballposition[4][0] = 218;
+		ballposition[4][1] = 164;
+		ballposition[5][0] = 218;
+		ballposition[5][1] = 200;
+		ballposition[6][0] = 218;
+		ballposition[6][1] = 236;
 
-		ballposition[7][0] = ballposition[1][0] - 6.0 * radius;
-		ballposition[7][1] = ballposition[1][1] + 1.5 * radius;
-		ballposition[8][0] = ballposition[1][0] - 6.0 * radius;
-		ballposition[8][1] = ballposition[1][1] + 1.5 * radius;
-		ballposition[9][0] = ballposition[1][0] - 8.0 * radius;
+		ballposition[7][0] = 194;
+		ballposition[7][1] = 218;
+		ballposition[8][0] = 194;
+		ballposition[8][1] = 182;
+		
+		ballposition[9][0] = 170;
+		ballposition[9][1] =200;
 
-		ballposition[9][1] = ballposition[1][1];
-
-		ball[0] = new Ball(x, y, 0);
+		ball[0] = new Ball(x, y);
 		for (int i = 0; i < Ballcount; i++) {
 			ball[i] = new Ball(ballposition[i][0], ballposition[i][1], ballColor[i], i);
 		}
@@ -107,7 +100,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		g.setColor(Color.BLACK);
 
 		for (int i = 0; i < 6; i++) {
-			drawcir(g, pockets[i][0], pockets[i][1], radius * 1.5);
+			drawcir(g, pockets[i][0], pockets[i][1], radius * 2);
 		}
 
 		g.drawRect(0, 0, 800, 400);
@@ -116,6 +109,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 			Color a = ball[i].getColor();
 			g.setColor(a);
 			drawcir(g, ball[i].getX(), ball[i].getY(), radius);
+			
 		}
 		if (drag_flag > 0) {
 			g.setColor(Color.lightGray);
@@ -137,14 +131,14 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 
 	public void mouseReleased(MouseEvent e) {
 		drag_flag = 0;
-		vX = (ball[0].getX() - mouseX) / Trans_v;
-		vY = (ball[0].getY() - mouseY) / Trans_v;
-		ball[0].roll(vX, vY);
+		vx = (ball[0].getX() - mouseX) / 3;
+		vy = (ball[0].getY() - mouseY) / 3;
+		ball[0].move(vx, vy);
 		repaint();
 	}
 
 	class Ball {
-		double velX, velY;
+		double momvx, momvy;
 		double x, y;
 		Color color;
 		int thisBall;
@@ -153,17 +147,18 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		boolean running = false;
 		boolean stop = false;
 
-		public Ball(double x, double y, int ib) {
-			this.x = x;
-			this.y = y;
-			this.thisBall = ib;
-		}
 
 		public Ball(double x, double y, Color color, int ib) {
 			this.x = x;
 			this.y = y;
 			this.color = color;
 			this.thisBall = ib;
+		}
+
+		public Ball(double x2, double y2) {
+			this.x=x2;
+			this.y=y2;
+			
 		}
 
 		public void setXY(double x, double y) {
@@ -179,14 +174,14 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 		}
 
 		public void addVel(double velX, double velY) {
-			this.velX += velX;
-			this.velY += velY;
+			this.momvx += momvx;
+			this.momvy += momvy;
 			return;
 		}
 
 		public void setVel(double velX, double velY) {
-			this.velX = velX;
-			this.velY = velY;
+			this.momvx = velX;
+			this.momvy = velY;
 			return;
 		}
 
@@ -221,37 +216,21 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 
 		Thread myThread;
 
-		public void roll(double vX, double vY) {
+		public void move(double vX, double vY) {
 
-			velX = vX;
-			velY = vY;
+			momvx = vx;
+			momvy = vy;
 
-			myThread = new Thread(new Angel());
+			myThread = new Thread(new gg());
 			myThread.start();
 
 		}
 
-		public void stop() {
-
-			// x = startX;
-			// y = startY;
-			velX = 0.0;
-			velY = 0.0;
-
-			running = false;
-			stop = true;
-		}
-
-		class Angel implements Runnable {
+		class gg implements Runnable {
 
 			public void run() {
-
 				running = true;
-				stop = false;
-
-				Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-				while (!stop) { // Start of infinite loop
+				while (true) { // Start of infinite loop
 					try {
 						Thread.sleep(redo);
 					} catch (InterruptedException e) {
@@ -260,116 +239,32 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 					count++;
 
 					// Apply friction
-					velX *= friction;
-					velY *= friction;
+					momvx *= 0.98;
+					momvy *= 0.98;
 
 					// Stop calculating if running too slowly
-					if (((velX > -minVel) && (velX < minVel)) && ((velY > -minVel) && (velY < minVel))) {
-						stop = true;
+					if (((momvx > -minv) && (momvx < minv)) && ((momvy > -minv) && (momvy < minv))) {
 						running = false;
 					}
 
 					// Move the ball
-					x += velX;
-					y += velY;
-
-					// Check for downing
-
-					pockets: for (int i = 0; i < 6; i++) {
-						if (thisBall == 0)
-							continue;
-						if ((x - pockets[i][0]) * (x - pockets[i][0]) < pocketSize2) {
-							if ((y - pockets[i][1]) * (y - pockets[i][1]) < pocketSize2) {
-								x = pockets[i][0];
-								y = pockets[i][1];
-								points += thisBall % 9;
-								if (thisBall == 0) {
-									points = 0;
-									System.out.println("Scratch. Total points : " + points);
-								
-							
-								}
-								stop = true;
-								repaint();
-								break pockets;
-							}
-						}
-
-					}
-
-					if (stop)
-						continue;
-
-					// Check for collision with other balls
-
-					synchronized (ball) { // Thread lock
-						for (int i = 0; i < Ballcount; i++) {
-
-							double dx = x - ball[i].getX();
-							double dy = y - ball[i].getY();
-							double dx2 = dx * dx;
-							double dy2 = dy * dy;
-
-							if (i == thisBall)
-								continue; // Same ball
-
-							if (dx2 > rad2)
-								continue; // No collision
-							if (dx2 + dy2 > rad2)
-								continue; // No collision
-
-							// Remove sign from separation vectors
-							double adx = Math.abs(dx);
-							double ady = Math.abs(dy);
-
-							double norm = adx + ady;
-
-							// Normalise separation vectors
-							double cx = adx / norm;
-							double cy = ady / norm;
-
-							// And multiply incoming velocity vectors by them
-							double velAddX = cx * velX * 0.9;
-							double velAddY = cy * velY * 0.9;
-
-							// Push the ball away to avoid another hit
-							// ball[i].addXY(-dx/2.0,-dy/2.0);
-							ball[i].addXY(-dx / 4.0, -dy / 4.0);
-
-							// Add transfer vector to new ball if already rolling
-							if (ball[i].running) {
-								ball[i].addVel(velAddX, velAddY);
-
-								// Or apply the vector if it's not moving yet
-							} else {
-								ball[i].roll(velAddX, velAddY);
-							}
-
-							// And subtract the rest from the current ball
-							velX -= velAddX;
-							velY -= velAddY;
-
-						} // End loop over balls
-
-					} // End thread lock
-
-					// Check for wall bounce
-
+					x += momvx;
+					y += momvy;
 					if (x < (xmin + radius)) {
-						velX = -velX;
+						momvx = -momvx;
 						x += radius;
 					}
 					if (x > (xmax - radius)) {
-						velX = -velX;
+						momvx = -momvx;
 						x -= radius;
 					}
 
 					if (y < (ymin + radius)) {
-						velY = -velY;
+						momvy = -momvy;
 						y += radius;
 					}
 					if (y > (ymax - radius)) {
-						velY = -velY;
+						momvy = -momvy;
 						y -= radius;
 					}
 
@@ -380,9 +275,6 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 					}
 
 				} // End infinite loop
-
-				velX=0.0;
-				velY=0.0;
 			}
 		}
 	}
@@ -413,7 +305,7 @@ public class qq extends Applet implements MouseListener, MouseMotionListener {
 	}
 
 	public static void main(String[] args) {
-		JFrame app = new JFrame("Snooker");
+		JFrame app = new JFrame("撞球");
 		app.setSize(900, 500);
 		qq a = new qq();
 		app.add(a);
