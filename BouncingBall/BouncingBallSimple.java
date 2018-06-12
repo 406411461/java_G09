@@ -1,155 +1,164 @@
 package BouncingBall;
 
 import java.awt.*;
-import java.util.Formatter;
+
 import javax.swing.*;
 
-/**
- * One ball bouncing inside a rectangular box. All codes in one file. Poor
- * design!
- */
-// Extends JPanel, so as to override the paintComponent() for custom rendering
-// codes.
+@SuppressWarnings("serial")
 public class BouncingBallSimple extends JPanel {
-	// Container box's width and height
-	private static final int BOX_WIDTH = 640;
-	private static final int BOX_HEIGHT = 480;
 
-	// Ball's properties
-	private float ballRadius = 100; // Ball's radius
-	private float ballX = ballRadius + 50; // Ball's center (x, y)
-	private float ballY = ballRadius + 20;
-	private static double ballSpeedX = 10; // Ball's speed for x and y
-	private static double ballSpeedY = 10;
-   
-	private static final int UPDATE_RATE = 10; // Number of refresh per second
+	private static final int BOX_WIDTH = 350;
+	private static final int BOX_HEIGHT = 700;
 
-	/** Constructor to create the UI components and init game objects. */
+
+	private float ballRadius = 70;
+
+	private float ballX[] = {ballRadius + 50,ballRadius + 110}; 
+	private float ballY[] = {ballRadius + 20,ballRadius + 260};
+	private static double ballSpeedX[] = {10,-20}; 
+	private static double ballSpeedY[] = {10,-20};
+
+
 	public BouncingBallSimple() {
 		this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
 
-		// Start the ball bouncing (in its own thread)
 		Thread gameThread = new Thread() {
 			public void run() {
 				
-				while (true) { // Execute one update step>
-					// Calculate the ball's new position
-					if(ballSpeedX==0&&ballSpeedY==0) {
-						break;
+				while (true) { 
+					if(((ballX[0]-ballX[1])*(ballX[0]-ballX[1])+(ballY[0]-ballY[1])*(ballY[0]-ballY[1]))<=(ballRadius)*(ballRadius)) {
+						double degree = Math.atan((ballY[0]-ballY[1]) / (ballX[0]-ballX[1]));
+						if(ballX[0]>ballX[1]||ballY[0]>ballY[1]) {
+							
+							ballSpeedX[0] = -ballSpeedX[0]*0.9;
+							ballSpeedY[0] = -ballSpeedY[0]*0.9;
+
+							ballSpeedX[1] = -ballSpeedX[1]*0.9;
+							ballSpeedY[1] = -ballSpeedY[1]*0.9;
+
+						}
+						else if(ballX[0]>ballX[1]||ballY[0]<ballY[1]) {
+							ballSpeedX[0] = -ballSpeedX[0]*0.9;
+							ballSpeedY[0] = -ballSpeedY[0]*0.9;
+
+							ballSpeedX[1] = -ballSpeedX[1]*0.9;
+							ballSpeedY[1] = -ballSpeedY[1]*0.9;
+						}
+						else if(ballX[0]<ballX[1]||ballY[0]>ballY[1]) {
+							ballSpeedX[0] = -ballSpeedX[0]*0.9;
+							ballSpeedY[0] = -ballSpeedY[0]*0.9;
+
+							ballSpeedX[1] = -ballSpeedX[1]*0.9;
+							ballSpeedY[1] = -ballSpeedY[1]*0.9;
+						}
+						else {
+							ballSpeedX[0] = -ballSpeedX[0]*0.9;
+							ballSpeedY[0] = -ballSpeedY[0]*0.9;
+
+							ballSpeedX[1] = -ballSpeedX[1]*0.9;
+							ballSpeedY[1] = -ballSpeedY[1]*0.9;
+						}
 					}
 					
-					if(ballSpeedX>0) {
-						System.out.println("true");
-						ballSpeedX = ballSpeedX - 0.01;
-						if (ballSpeedX<=0) {
-							ballSpeedX = 0;
-							System.out.println("0");
+					
+					for(int i=0;i<2;i++) {
+					
+						
+					if(ballSpeedX[i]>0) {
+						
+						ballSpeedX[i] = ballSpeedX[i] - 0.05;
+						if (ballSpeedX[i]<=0) {
+							ballSpeedX[i] = 0;
 							
 						}
-						else if (ballX + ballRadius > BOX_WIDTH) {
-							ballSpeedX = -ballSpeedX;
-							ballX = BOX_WIDTH - ballRadius;
+						else if (ballX[i] + ballRadius/100 >= BOX_WIDTH) {
+							ballSpeedX[i] = -ballSpeedX[i];
+							ballX[i] = BOX_WIDTH-ballRadius/100;
 						}
 						
-					}else if(ballSpeedX<0) {
-						System.out.println("false");
-						ballSpeedX = ballSpeedX + 0.01;
-						if (ballSpeedX>=0) {
-							ballSpeedX = 0;
-							System.out.println("0");
+					}else if(ballSpeedX[i]<0) {
+						ballSpeedX[i] = ballSpeedX[i] + 0.05;
+						if (ballSpeedX[i]>=0) {
+							ballSpeedX[i] = 0;
 							
 						}
-						else if (ballX - ballRadius < 0) {
-							ballSpeedX = -ballSpeedX; // Reflect along normal
-							ballX = ballRadius; // Re-position the ball at the edge
+						else if (ballX[i] - ballRadius < 0) {
+							ballSpeedX[i] = -ballSpeedX[i];
+							ballX[i] = ballRadius;
 						} 
 						
 					}
-					if(ballSpeedY>0) {
-						System.out.println("false");
-						ballSpeedY = ballSpeedY - 0.01;
-						if (ballSpeedY<=0) {
-							ballSpeedY = 0;
-							System.out.println("0");
+					if(ballSpeedY[i]>0) {
+
+						ballSpeedY[i] = ballSpeedY[i] - 0.05;
+						if (ballSpeedY[i]<=0) {
+							ballSpeedY[i] = 0;
 							
 						}
-						else if (ballY + ballRadius > BOX_HEIGHT) {
-							ballSpeedY = -ballSpeedX;
-							ballY = BOX_HEIGHT - ballRadius;
+						else if (ballY[i] + ballRadius/1000 >= BOX_HEIGHT) {
+							ballSpeedY[i] = -ballSpeedY[i];
+							ballY[i] = BOX_HEIGHT-ballRadius/100;
 						}
 						
-					}else if(ballSpeedY<0){
-						System.out.println("false");
-						ballSpeedY = ballSpeedY + 0.01;
-						if (ballSpeedY>=0) {
+					}else if(ballSpeedY[i]<0){
+
+						ballSpeedY[i] = ballSpeedY[i] + 0.05;
+						if (ballSpeedY[i]>=0) {
 							
-							ballSpeedY = 0;
+							ballSpeedY[i] = 0;
 							
-							System.out.println(1);
 							
 						}
-						else if (ballY - ballRadius <= 0) {
-							ballSpeedY = -ballSpeedY; // Reflect along normal
-							ballX = ballRadius; // Re-position the ball at the edge
+						else if (ballY[i] - ballRadius <= 0) {
+							ballSpeedY[i] = -ballSpeedY[i]; 
+							ballY[i] = ballRadius;
 						}
 						
 						
 					}
 					
-					ballX += ballSpeedX;
-					ballY += ballSpeedY;
-					repaint(); // Callback paintComponent()
-					// Delay for timing control and give other threads a chance
+					ballX[i] += ballSpeedX[i];
+					ballY[i] += ballSpeedY[i];
+					
+					repaint(); // 回傳 paintComponent()
+					if(ballSpeedY[0]==0&&ballSpeedY[0]==0&&ballSpeedY[1]==0&&ballSpeedY[1]==0) {
+						break;
+					}
+					}
+					
 					try {
-						Thread.sleep(10 ); // milliseconds
-					} catch (InterruptedException ex) {
+						Thread.sleep(10 );
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 			}
 		};
-//		if(ballSpeedX!=0||ballSpeedY!=0) {
+
 			gameThread.start();	
-//		s
-//		}
-//		if(ballSpeedX)	{	
-//			System.out.printf("STOP");
-//			gameThread.stop();
-//		}
 		
 	}
 
-	/** Custom rendering codes for drawing the JPanel */
+
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g); // Paint background
-
-		// Draw the box
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
-
-		// Draw the ball
-		g.setColor(Color.BLUE);
-		g.fillOval((int) (ballX - ballRadius), (int) (ballY - ballRadius), (int) (2 * ballRadius),
-				(int) (2 * ballRadius));
-
-		// Display the ball's information
-		g.setColor(Color.WHITE);
-		g.setFont(new Font("Courier New", Font.PLAIN, 12));
-		StringBuilder sb = new StringBuilder();
-		Formatter formatter = new Formatter(sb);
-		formatter.format("Ball @(%3.0f,%3.0f) Speed=(%2.0f,%2.0f)", ballX, ballY, ballSpeedX, ballSpeedY);
-		g.drawString(sb.toString(), 20, 30);
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D)g;
+     	g2d.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+     	g2d.setRenderingHint (RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+		g2d.setColor(Color.BLUE);
+		g2d.fillOval((int) (ballX[0] - ballRadius), (int) (ballY[0] - ballRadius), (int) (ballRadius),(int) ( ballRadius));	
+		g2d.setColor(Color.red);
+		g2d.fillOval((int) (ballX[1] - ballRadius), (int) (ballY[1] - ballRadius), (int) (ballRadius),(int) ( ballRadius));	
 	}
 
-	/** main program (entry point) */
+
 	public static void main(String[] args) {
-		// Run GUI in the Event Dispatcher Thread (EDT) instead of main thread.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				// Set up main window (using Swing's Jframe)
-				JFrame frame = new JFrame("zz");
+				JFrame frame = new JFrame("減速");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setContentPane(new BouncingBallSimple());
+				frame.setContentPane(new BouncingBallSimple());				
 				frame.pack();
 				frame.setVisible(true);
 			}
