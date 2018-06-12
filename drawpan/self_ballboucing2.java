@@ -44,7 +44,7 @@ import javax.swing.JFrame;
      float test;
      //主函?
      public static void main(String[] args) {
-         new self_ballboucing();
+         new self_ballboucing2();
      }
      //使用构造器?建窗体并?置
      public self_ballboucing2(){
